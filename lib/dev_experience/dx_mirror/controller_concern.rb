@@ -23,7 +23,6 @@ module DevExperience
         ViewAnnotations.install!
         Instrumenter.activate(request, self)
         yield
-        Instrumenter.finalize(self)
       rescue => e
         raise e
       ensure
@@ -34,9 +33,9 @@ module DevExperience
         return unless response.content_type&.include?("text/html")
         return if response.body.blank?
 
+        Instrumenter.finalize(self)
         data_hash = Instrumenter.to_hash
         json_data = JSON.generate(data_hash)
-        Instrumenter.deactivate
 
         panel_html = DevExperience::DxMirrorModal::Component.new(data: data_hash).render_in(view_context)
         overlay_html = dx_mirror_build_overlay(json_data, panel_html)
