@@ -1,0 +1,18 @@
+<div class="max-w-4xl mx-auto p-6">
+  <%= render DevExperience::TemplateHeader::Component.new(template: @template) %>
+
+  <nav class="flex gap-4 mb-6 border-b pb-2">
+    <%= link_to "Actors", template_actors_path(@template), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Use Cases", template_use_cases_path(@template), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Sequences", template_sequences_path(@template), class: "text-blue-600 hover:underline" %>
+  </nav>
+
+  <h2 class="text-xl font-bold mb-4">Apps</h2>
+  <div class="space-y-2">
+    <% @template.apps.each do |app| %>
+      <div class="border rounded p-3">
+        <%= link_to app.name, app_path(app), class: "text-blue-600 hover:underline font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+</div>

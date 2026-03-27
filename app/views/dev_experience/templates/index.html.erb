@@ -1,0 +1,19 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Templates</h1>
+  <div class="space-y-4">
+    <% @templates.each do |template| %>
+      <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <%= link_to template.name, template_path(template), class: "text-xl font-semibold text-blue-600 hover:underline" %>
+        <% if template.description.present? %>
+          <p class="mt-1 text-gray-600"><%= template.description %></p>
+        <% end %>
+        <div class="mt-2 text-sm text-gray-500">
+          <%= template.apps.count %> apps &middot;
+          <%= template.actors.count %> actors &middot;
+          <%= template.use_cases.count %> use cases &middot;
+          <%= template.sequences.count %> sequences
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

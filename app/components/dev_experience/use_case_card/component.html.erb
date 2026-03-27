@@ -1,0 +1,24 @@
+<div class="border rounded-lg p-4 shadow-sm">
+  <div class="flex items-baseline gap-2">
+    <span class="text-sm font-mono text-blue-600"><%= use_case.identifier %></span>
+    <h3 class="text-lg font-semibold"><%= use_case.name %></h3>
+  </div>
+  <% if use_case.description.present? %>
+    <p class="mt-1 text-gray-700"><%= use_case.description %></p>
+  <% end %>
+  <% if use_case.actors.any? %>
+    <div class="mt-2 flex flex-wrap gap-1">
+      <% use_case.actors.each do |actor| %>
+        <span class="inline-block bg-gray-100 rounded px-2 py-0.5 text-sm text-gray-600"><%= actor.name %></span>
+      <% end %>
+    </div>
+  <% end %>
+  <% if use_case.implements.present? %>
+    <p class="mt-2 text-sm text-indigo-600">
+      Implements: <%= use_case.implements.identifier %> — <%= use_case.implements.name %>
+    </p>
+  <% end %>
+  <span class="mt-2 inline-block text-sm text-gray-500">
+    <%= use_case.owner_type.demodulize %>: <%= use_case.owner.name %>
+  </span>
+</div>

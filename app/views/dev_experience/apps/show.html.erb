@@ -1,0 +1,9 @@
+<div class="max-w-4xl mx-auto p-6">
+  <%= render DevExperience::AppHeader::Component.new(app: @app) %>
+
+  <nav class="flex gap-4 mb-6 border-b pb-2">
+    <%= link_to "Actors", app_actors_path(@app), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Use Cases", app_use_cases_path(@app), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Sequences", app_sequences_path(@app), class: "text-blue-600 hover:underline" %>
+  </nav>
+</div>

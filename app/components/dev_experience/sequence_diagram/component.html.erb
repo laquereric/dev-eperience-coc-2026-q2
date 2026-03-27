@@ -1,0 +1,16 @@
+<div class="border rounded-lg p-4 shadow-sm">
+  <h3 class="text-lg font-semibold mb-3"><%= sequence.name %></h3>
+  <div class="space-y-1 font-mono text-sm">
+    <% sequence.steps.each do |step| %>
+      <div class="flex items-center gap-2">
+        <span class="text-gray-500 w-6 text-right"><%= step.position %>.</span>
+        <span class="font-semibold text-blue-700"><%= step.from_actor.name %></span>
+        <span class="text-gray-400">—<%= step.action %>→</span>
+        <span class="font-semibold text-green-700"><%= step.to_actor.name %></span>
+      </div>
+    <% end %>
+  </div>
+  <span class="mt-3 inline-block text-sm text-gray-500">
+    <%= sequence.owner_type.demodulize %>: <%= sequence.owner.name %>
+  </span>
+</div>

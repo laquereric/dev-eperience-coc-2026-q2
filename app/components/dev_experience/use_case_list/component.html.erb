@@ -1,0 +1,8 @@
+<div>
+  <h2 class="text-xl font-bold mb-4">Use Cases</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <% use_cases.each do |uc| %>
+      <%= render DevExperience::UseCaseCard::Component.new(use_case: uc) %>
+    <% end %>
+  </div>
+</div>

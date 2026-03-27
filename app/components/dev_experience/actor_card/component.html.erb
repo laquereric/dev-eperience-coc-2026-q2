@@ -1,0 +1,9 @@
+<div class="border rounded-lg p-4 shadow-sm">
+  <h3 class="text-lg font-semibold"><%= actor.name %></h3>
+  <% if actor.description.present? %>
+    <p class="mt-1 text-gray-700"><%= actor.description %></p>
+  <% end %>
+  <span class="mt-2 inline-block text-sm text-gray-500">
+    <%= actor.owner_type.demodulize %>: <%= actor.owner.name %>
+  </span>
+</div>

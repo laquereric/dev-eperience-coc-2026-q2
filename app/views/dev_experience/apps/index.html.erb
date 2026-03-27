@@ -1,0 +1,16 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Apps</h1>
+  <div class="space-y-4">
+    <% @apps.each do |app| %>
+      <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <%= link_to app.name, app_path(app), class: "text-xl font-semibold text-blue-600 hover:underline" %>
+        <p class="mt-1 text-sm text-gray-500">Template: <%= app.template.name %></p>
+        <div class="mt-2 text-sm text-gray-500">
+          <%= app.actors.count %> actors &middot;
+          <%= app.use_cases.count %> use cases &middot;
+          <%= app.sequences.count %> sequences
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div>
+  <h2 class="text-xl font-bold mb-4">Sequences</h2>
+  <div class="space-y-4">
+    <% sequences.each do |seq| %>
+      <%= render DevExperience::SequenceDiagram::Component.new(sequence: seq) %>
+    <% end %>
+  </div>
+</div>
