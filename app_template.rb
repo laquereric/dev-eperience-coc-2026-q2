@@ -316,4 +316,34 @@ say "Installing gems..."
 
 Bundler.with_unbundled_env { run "bundle install" }
 
-say_status :info, "Done! Run `bin/rails server` and visit http://localhost:3000/dx"
+# -----------------------------------------------------------------------------
+# 10. Database setup — copy engine migrations and run them
+# -----------------------------------------------------------------------------
+
+say "Installing DevExperience migrations..."
+
+rails_command "dev_experience:install:migrations"
+rails_command "db:migrate"
+
+say_status :info, "Database migrated with DevExperience tables"
+
+# -----------------------------------------------------------------------------
+# 11. Import UML specs (if vendor/ and apps/ directories exist)
+# -----------------------------------------------------------------------------
+
+if File.directory?("vendor/rails-coc-2026-q2") || File.directory?("apps")
+  say "Importing UML specs..."
+  rails_command "dev_experience:import"
+  say_status :info, "UML specs imported into database"
+end
+
+# -----------------------------------------------------------------------------
+# 12. Hindsight sync (if Hindsight server is available)
+# -----------------------------------------------------------------------------
+
+say_status :info, <<~MSG
+  Done! Next steps:
+    bin/rails server           → visit http://localhost:3000/dx
+    bin/rails dev_experience:import   → re-import UML specs from markdown
+    bin/rails hindsight:sync          → sync specs to Hindsight memory banks
+MSG

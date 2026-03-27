@@ -2,9 +2,9 @@
   <%= render DevExperience::TemplateHeader::Component.new(template: @template) %>
 
   <nav class="flex gap-4 mb-6 border-b pb-2">
-    <%= link_to "Actors", template_actors_path(@template), class: "text-blue-600 hover:underline" %>
-    <%= link_to "Use Cases", template_use_cases_path(@template), class: "text-blue-600 hover:underline" %>
-    <%= link_to "Sequences", template_sequences_path(@template), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Actors", actors_template_path(@template), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Use Cases", use_cases_template_path(@template), class: "text-blue-600 hover:underline" %>
+    <%= link_to "Sequences", sequences_template_path(@template), class: "text-blue-600 hover:underline" %>
   </nav>
 
   <h2 class="text-xl font-bold mb-4">Apps</h2>

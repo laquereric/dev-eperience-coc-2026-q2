@@ -5,24 +5,27 @@ namespace :dev_experience do
   task import: :environment do
     require "dev_experience/uml_import"
 
-    base = Rails.root.join("..")
+    base = find_project_root
 
     # Import templates from vendor/ directories that have spec files
-    Pathname.new(base.join("vendor")).children.select(&:directory?).each do |dir|
-      files = dir.children.map(&:basename).map(&:to_s)
-      has_specs = files.any? { |f| f.match?(/(?:\w+_)?(?:ACTORS|USE_CASES|SEQUENCES)\.md$/) }
-      next unless has_specs
+    vendor_dir = base.join("vendor")
+    if vendor_dir.directory?
+      vendor_dir.children.select(&:directory?).each do |dir|
+        files = dir.children.select(&:file?).map(&:basename).map(&:to_s)
+        has_specs = files.any? { |f| f.match?(/(?:\w+_)?(?:ACTORS|USE_CASES|SEQUENCES)\.md$/) }
+        next unless has_specs
 
-      name = dir.basename.to_s
-      puts "Importing template: #{name}"
-      DevExperience::UmlImport.import_template(path: dir.to_s, name: name)
+        name = dir.basename.to_s
+        puts "Importing template: #{name}"
+        DevExperience::UmlImport.import_template(path: dir.to_s, name: name)
+      end
     end
 
     # Import apps from apps/ directories that have spec files
     apps_dir = base.join("apps")
     if apps_dir.directory?
       apps_dir.children.select(&:directory?).each do |dir|
-        files = dir.children.map(&:basename).map(&:to_s)
+        files = dir.children.select(&:file?).map(&:basename).map(&:to_s)
         has_specs = files.any? { |f| f.match?(/(?:\w+_)?(?:ACTORS|USE_CASES|SEQUENCES)\.md$/) }
         next unless has_specs
 
@@ -55,6 +58,17 @@ namespace :dev_experience do
     )
     puts "Imported app: #{args[:name]}"
   end
+end
+
+# Walk up from Rails.root to find the project root (directory containing both vendor/ and apps/).
+def find_project_root
+  dir = Pathname.new(Rails.root)
+  5.times do
+    return dir if dir.join("vendor").directory? && dir.join("apps").directory?
+    dir = dir.parent
+  end
+  # Fallback: assume one level up from Rails.root
+  Pathname.new(Rails.root).join("..")
 end
 
 def infer_template_name(app_name)

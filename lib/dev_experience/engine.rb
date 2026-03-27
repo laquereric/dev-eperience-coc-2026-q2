@@ -11,9 +11,7 @@ module DevExperience
       end
     end
 
-    initializer "dev_experience.autoload" do |app|
-      app.config.autoload_paths << root.join("app", "components")
-    end
+    config.autoload_paths << root.join("app", "components")
 
     rake_tasks do
       load File.expand_path("../tasks/hindsight.rake", __dir__)

@@ -18,7 +18,7 @@ module DevExperience
     # @label With implements
     def with_implements
       template = Template.new(id: 1, name: "rails-coc-2026-q2")
-      app = App.new(id: 1, name: "rcoc-human-user", template: template)
+      app = App.new(id: 1, name: "rcoc-human-customer", template: template)
       parent_uc = UseCase.new(identifier: "UC-1", name: "Authenticate", owner: template)
       uc = UseCase.new(
         identifier: "UC-1",

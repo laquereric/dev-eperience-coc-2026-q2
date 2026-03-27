@@ -1,0 +1,105 @@
+<div class="dx-mirror-modal-body">
+  <%# Model Tab %>
+  <div data-panel="model">
+    <% if data[:models].present? %>
+      <% data[:models].each do |model_name, info| %>
+        <%= render DevExperience::DxMirrorSchemaTable::Component.new(
+          model_name: model_name,
+          schema: info
+        ) %>
+      <% end %>
+    <% else %>
+      <p class="dx-mirror-empty">No models detected for this request.</p>
+    <% end %>
+  </div>
+
+  <%# View Tab %>
+  <div data-panel="view" style="display:none;">
+    <% views = data[:views] || {} %>
+    <% if views[:template] %>
+      <h3 class="dx-mirror-section-title">Template</h3>
+      <%= render DevExperience::DxMirrorSourceList::Component.new(
+        paths: [views[:template]],
+        label: "Template"
+      ) %>
+    <% end %>
+    <% if views[:partials]&.any? %>
+      <h3 class="dx-mirror-section-title">Partials</h3>
+      <%= render DevExperience::DxMirrorSourceList::Component.new(
+        paths: views[:partials],
+        label: "Partials"
+      ) %>
+    <% end %>
+    <% if views[:components]&.any? %>
+      <h3 class="dx-mirror-section-title">Components</h3>
+      <ul class="dx-mirror-list">
+        <% views[:components].each do |comp| %>
+          <li class="dx-mirror-list-item"><code><%= comp %></code></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if views[:layout] %>
+      <h3 class="dx-mirror-section-title">Layout</h3>
+      <%= render DevExperience::DxMirrorSourceList::Component.new(
+        paths: [views[:layout]],
+        label: "Layout"
+      ) %>
+    <% end %>
+  </div>
+
+  <%# Controller Tab %>
+  <div data-panel="controller" style="display:none;">
+    <% ctrl = data[:controller] || {} %>
+    <table class="dx-mirror-table">
+      <tr><td class="dx-mirror-label">Class</td><td><code><%= ctrl[:class_name] %></code></td></tr>
+      <tr><td class="dx-mirror-label">Action</td><td><code><%= ctrl[:action] %></code></td></tr>
+      <tr>
+        <td class="dx-mirror-label">Before Actions</td>
+        <td>
+          <% if ctrl[:before_actions]&.any? %>
+            <% ctrl[:before_actions].each do |ba| %><code class="dx-mirror-tag"><%= ba %></code> <% end %>
+          <% else %>
+            <span class="dx-mirror-muted">none</span>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td class="dx-mirror-label">Params</td>
+        <td><code><%= ctrl[:params]&.to_json %></code></td>
+      </tr>
+    </table>
+    <% if ctrl[:file_path] %>
+      <h3 class="dx-mirror-section-title">Source</h3>
+      <%= render DevExperience::DxMirrorSourceList::Component.new(
+        paths: [ctrl[:file_path]],
+        label: "Controller"
+      ) %>
+    <% end %>
+  </div>
+
+  <%# Agentic Tab %>
+  <div data-panel="agentic" style="display:none;">
+    <% agentic = data[:agentic] || {} %>
+    <% if agentic[:banks]&.any? %>
+      <h3 class="dx-mirror-section-title">HindSight Banks</h3>
+      <div class="dx-mirror-bank-list" data-dx-mirror-target="bankList">
+        <% agentic[:banks].each do |bank_id| %>
+          <div class="dx-mirror-bank-card">
+            <code class="dx-mirror-bank-id"><%= bank_id %></code>
+            <button class="dx-mirror-recall-btn"
+                    data-action="click->dx-mirror#recallBank"
+                    data-bank-id="<%= bank_id %>">
+              Recall
+            </button>
+            <div class="dx-mirror-recall-results" data-bank-results="<%= bank_id %>"></div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="dx-mirror-empty">No HindSight banks mapped for this context.</p>
+    <% end %>
+    <% unless agentic[:available] %>
+      <p class="dx-mirror-warning">HindSight client is not configured.</p>
+    <% end %>
+  </div>
+</div>

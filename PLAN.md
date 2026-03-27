@@ -63,7 +63,7 @@ Example: `rails-coc-2026-q2` defines RCOC_ACTORS, RCOC_USE_CASES, RCOC_SEQUENCES
 
 An application of a Template to a specific domain. Inherits the Template's actors
 and use cases, then narrows them to a specific perspective or context.
-Example: `b-and-h` applies `rails-coc-2026-q2` with three apps (rcoc-human-user,
+Example: `b-and-h` applies `rails-coc-2026-q2` with three apps (rcoc-human-customer,
 rcoc-human-agent, rcoc-ai-agent), each scoping the RCOC specs to one actor's view.
 
 ## Domain Models
@@ -237,7 +237,7 @@ Each Template and App gets its own Hindsight memory bank:
 | Owner                  | Bank ID                             |
 |------------------------|-------------------------------------|
 | rails-coc-2026-q2     | `dx:template:rails-coc-2026-q2`    |
-| rcoc-human-user app    | `dx:app:rcoc-human-user`           |
+| rcoc-human-customer app    | `dx:app:rcoc-human-customer`           |
 | rcoc-human-agent app   | `dx:app:rcoc-human-agent`          |
 | rcoc-ai-agent app      | `dx:app:rcoc-ai-agent`             |
 
@@ -265,7 +265,7 @@ bin/rails hindsight:sync
 bin/rails "hindsight:sync_template[vendor/rails-coc-2026-q2,rails-coc-2026-q2]"
 
 # Sync a single app
-bin/rails "hindsight:sync_app[apps/rcoc-human-user,rcoc-human-user,rails-coc-2026-q2]"
+bin/rails "hindsight:sync_app[apps/rcoc-human-customer,rcoc-human-customer,rails-coc-2026-q2]"
 ```
 
 ### UmlSync Module

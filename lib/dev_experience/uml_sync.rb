@@ -6,7 +6,7 @@ module DevExperience
   #
   # Bank naming: "dx:<owner_type>:<name>"
   #   e.g. "dx:template:rails-coc-2026-q2"
-  #   e.g. "dx:app:rcoc-human-user"
+  #   e.g. "dx:app:rcoc-human-customer"
   module UmlSync
     SPEC_FILES = %w[ACTORS.md USE_CASES.md SEQUENCES.md].freeze
     PREFIXED_SPEC_FILES = ->(prefix) {

@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+#
+# Smoke test for the DevExperience engine.
+# Run from the host Rails app root after setup.
+#
+# Usage:
+#   vendor/dev-experience-coc-2026-q2/bin/smoke_test
+#
+# Checks:
+#   1. Engine migrations are installed
+#   2. Database tables exist
+#   3. Routes are mounted at /dx
+#   4. UML import works
+#   5. ViewComponent generator is available
+
+set -euo pipefail
+
+PASS=0
+FAIL=0
+
+check() {
+  local desc="$1"
+  shift
+  if "$@" > /dev/null 2>&1; then
+    echo "  PASS: $desc"
+    PASS=$((PASS + 1))
+  else
+    echo "  FAIL: $desc"
+    FAIL=$((FAIL + 1))
+  fi
+}
+
+echo "=== DevExperience Smoke Test ==="
+echo ""
+
+# 1. Migrations
+echo "Migrations:"
+check "Engine migrations copied" test -n "$(find db/migrate -name '*dev_experience*' 2>/dev/null | head -1)"
+check "Database is migrated" bin/rails db:migrate:status
+
+# 2. Tables
+echo ""
+echo "Database tables:"
+check "dev_experience_templates table exists" bin/rails runner "DevExperience::Template.count"
+check "dev_experience_apps table exists" bin/rails runner "DevExperience::App.count"
+check "dev_experience_actors table exists" bin/rails runner "DevExperience::Actor.count"
+check "dev_experience_use_cases table exists" bin/rails runner "DevExperience::UseCase.count"
+check "dev_experience_sequences table exists" bin/rails runner "DevExperience::Sequence.count"
+check "dev_experience_steps table exists" bin/rails runner "DevExperience::Step.count"
+
+# 3. Routes
+echo ""
+echo "Routes:"
+check "Engine mounted at /dx" bin/rails routes | grep -q "dev_experience"
+check "/dx/templates route exists" bin/rails routes | grep -q "templates"
+check "/dx/apps route exists" bin/rails routes | grep -q "apps"
+
+# 4. Import
+echo ""
+echo "Import:"
+check "dev_experience:import task exists" bin/rails -T | grep -q "dev_experience:import"
+check "hindsight:sync task exists" bin/rails -T | grep -q "hindsight:sync"
+
+# 5. Generator
+echo ""
+echo "Generator:"
+check "ViewComponent generator available" bin/rails generate --help | grep -q "view_component"
+
+# 6. Import data check (if specs exist)
+echo ""
+echo "Data (after import):"
+TEMPLATE_COUNT=$(bin/rails runner "puts DevExperience::Template.count" 2>/dev/null || echo "0")
+APP_COUNT=$(bin/rails runner "puts DevExperience::App.count" 2>/dev/null || echo "0")
+ACTOR_COUNT=$(bin/rails runner "puts DevExperience::Actor.count" 2>/dev/null || echo "0")
+UC_COUNT=$(bin/rails runner "puts DevExperience::UseCase.count" 2>/dev/null || echo "0")
+SEQ_COUNT=$(bin/rails runner "puts DevExperience::Sequence.count" 2>/dev/null || echo "0")
+echo "  Templates: $TEMPLATE_COUNT | Apps: $APP_COUNT | Actors: $ACTOR_COUNT | UseCases: $UC_COUNT | Sequences: $SEQ_COUNT"
+
+echo ""
+echo "=== Results: $PASS passed, $FAIL failed ==="
+
+if [ "$FAIL" -gt 0 ]; then
+  exit 1
+fi

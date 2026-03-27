@@ -63,7 +63,7 @@ def sync_apps(root, client)
     next if specs.empty?
 
     name = dir.basename.to_s
-    # Infer template from directory name prefix (e.g. rcoc-human-user -> rails-coc-2026-q2)
+    # Infer template from directory name prefix (e.g. rcoc-human-customer -> rails-coc-2026-q2)
     template_name = infer_template(name)
     DevExperience::UmlSync.sync_app(path: dir.to_s, name: name, template_name: template_name, client: client)
   end

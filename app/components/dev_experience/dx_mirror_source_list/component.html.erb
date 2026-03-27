@@ -1,0 +1,10 @@
+<ul class="dx-mirror-source-list">
+  <% paths.compact.each do |path| %>
+    <li class="dx-mirror-source-item">
+      <% absolute = path.start_with?("/") ? path : Rails.root.join(path).to_s %>
+      <a href="vscode://file/<%= absolute %>" class="dx-mirror-vscode-link">
+        <%= path.to_s.sub(Rails.root.to_s + "/", "") %>
+      </a>
+    </li>
+  <% end %>
+</ul>

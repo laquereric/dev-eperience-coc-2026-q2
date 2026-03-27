@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#
+# Sets up the DevExperience engine in an existing Rails app.
+#
+# Usage (from the host Rails app root):
+#   vendor/dev-experience-coc-2026-q2/bin/setup_host
+#
+# What it does:
+#   1. Adds engine gem to Gemfile (if not present)
+#   2. Bundles
+#   3. Copies and runs engine migrations
+#   4. Mounts engine route at /dx (if not present)
+#   5. Imports UML specs from vendor/ and apps/
+
+set -euo pipefail
+
+ENGINE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+APP_DIR="$(pwd)"
+
+# macOS-compatible relative path
+relpath() {
+  python3 -c "import os.path; print(os.path.relpath('$1', '$2'))"
+}
+
+echo "=== DevExperience Host Setup ==="
+echo "Engine: $ENGINE_DIR"
+echo "Host:   $APP_DIR"
+echo ""
+
+# 1. Check we're in a Rails app
+if [ ! -f "$APP_DIR/Gemfile" ] || [ ! -f "$APP_DIR/config/routes.rb" ]; then
+  echo "Error: Run this from a Rails application root directory."
+  exit 1
+fi
+
+# 2. Add gem if not present
+if ! grep -q 'dev_experience' "$APP_DIR/Gemfile"; then
+  echo "Adding dev_experience gem to Gemfile..."
+  REL_ENGINE="$(relpath "$ENGINE_DIR" "$APP_DIR")"
+  echo "" >> "$APP_DIR/Gemfile"
+  echo "gem \"dev_experience\", path: \"$REL_ENGINE\"" >> "$APP_DIR/Gemfile"
+fi
+
+if ! grep -q 'hindsight' "$APP_DIR/Gemfile"; then
+  HINDSIGHT_DIR="$ENGINE_DIR/../hindsight"
+  if [ -d "$HINDSIGHT_DIR" ]; then
+    echo "Adding hindsight gem to Gemfile..."
+    REL_HINDSIGHT="$(relpath "$HINDSIGHT_DIR" "$APP_DIR")"
+    echo "gem \"hindsight\", path: \"$REL_HINDSIGHT\"" >> "$APP_DIR/Gemfile"
+  fi
+fi
+
+# 3. Bundle install
+echo "Running bundle install..."
+cd "$APP_DIR"
+bundle install
+
+# 4. Copy and run migrations
+echo "Installing DevExperience migrations..."
+bin/rails dev_experience:install:migrations
+bin/rails db:migrate
+
+# 5. Mount engine route
+if ! grep -q 'DevExperience::Engine' "$APP_DIR/config/routes.rb"; then
+  echo "Mounting engine at /dx..."
+  sed -i '' '/^end$/i\
+  mount DevExperience::Engine, at: "/dx"
+' "$APP_DIR/config/routes.rb"
+fi
+
+# 6. Import UML specs
+echo "Importing UML specs..."
+bin/rails dev_experience:import || echo "  (no specs found to import, skipping)"
+
+echo ""
+echo "=== Setup complete ==="
+echo "  bin/rails server -> visit http://localhost:3000/dx"
+echo "  bin/rails dev_experience:import -> re-import UML specs"
+echo "  bin/rails hindsight:sync -> sync to Hindsight memory banks"

@@ -1,0 +1,78 @@
+<div class="dx-mirror-schema">
+  <h3 class="dx-mirror-section-title">
+    <code><%= model_name %></code>
+    <span class="dx-mirror-muted">(<%= schema[:table] %>)</span>
+    <% if schema[:record_count] %>
+      <span class="dx-mirror-badge"><%= schema[:record_count] %> record<%= schema[:record_count] == 1 ? "" : "s" %></span>
+    <% end %>
+  </h3>
+
+  <% if schema[:file_path] %>
+    <p class="dx-mirror-file-link">
+      <a href="vscode://file/<%= schema[:file_path] %>" class="dx-mirror-vscode-link">
+        <%= schema[:file_path].to_s.sub(Rails.root.to_s + "/", "") %>
+      </a>
+    </p>
+  <% end %>
+
+  <%# Columns %>
+  <table class="dx-mirror-table">
+    <thead>
+      <tr>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Null</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% (schema[:columns] || {}).each do |col_name, col_info| %>
+        <tr>
+          <td><code><%= col_name %></code></td>
+          <td><code><%= col_info[:type] %></code></td>
+          <td><%= col_info[:null] ? "yes" : "no" %></td>
+          <td><code><%= col_info[:default] || "-" %></code></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%# Associations %>
+  <% if schema[:associations]&.any? %>
+    <h4 class="dx-mirror-subsection-title">Associations</h4>
+    <table class="dx-mirror-table">
+      <thead>
+        <tr><th>Type</th><th>Name</th><th>Class</th><th>FK</th></tr>
+      </thead>
+      <tbody>
+        <% schema[:associations].each do |assoc| %>
+          <tr>
+            <td><code><%= assoc[:type] %></code></td>
+            <td><code><%= assoc[:name] %></code></td>
+            <td><code><%= assoc[:class_name] || assoc[:error] %></code></td>
+            <td><code><%= assoc[:foreign_key] || "-" %></code></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <%# Validations %>
+  <% if schema[:validations]&.any? %>
+    <h4 class="dx-mirror-subsection-title">Validations</h4>
+    <table class="dx-mirror-table">
+      <thead>
+        <tr><th>Attribute</th><th>Kind</th><th>Options</th></tr>
+      </thead>
+      <tbody>
+        <% schema[:validations].each do |v| %>
+          <tr>
+            <td><code><%= v[:attributes]&.join(", ") %></code></td>
+            <td><code><%= v[:kind] %></code></td>
+            <td><code><%= v[:options]&.map { |k, val| "#{k}: #{val}" }&.join(", ") %></code></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

@@ -1,7 +1,7 @@
 <div class="mb-6">
   <h1 class="text-2xl font-bold"><%= app.name %></h1>
   <p class="mt-1 text-sm text-gray-500">
-    Template: <%= link_to app.template.name, dev_experience.template_path(app.template), class: "text-blue-600 hover:underline" %>
+    Template: <%= link_to app.template.name, helpers.template_path(app.template), class: "text-blue-600 hover:underline" %>
   </p>
   <% if app.repo_url.present? %>
     <a href="<%= app.repo_url %>" class="mt-2 inline-block text-sm text-blue-600 hover:underline" target="_blank" rel="noopener">

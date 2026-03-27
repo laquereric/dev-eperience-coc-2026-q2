@@ -13,7 +13,7 @@ template to a specific domain, scoping the specs to one actor's perspective.
 
 - **Template:** `rails-coc-2026-q2` defines RCOC_ACTORS, RCOC_USE_CASES, RCOC_SEQUENCES
 - **App:** `b-and-h` applies that template with three sub-apps:
-  - `rcoc-human-user` — the User's view
+  - `rcoc-human-customer` — the Customer's view
   - `rcoc-human-agent` — the Human_Agent's view
   - `rcoc-ai-agent` — the AI_Agent's view
 
