@@ -17,6 +17,7 @@ module DevExperience
 
     rake_tasks do
       load File.expand_path("../tasks/hindsight.rake", __dir__)
+      load File.expand_path("../tasks/uml_import.rake", __dir__)
     end
   end
 end
