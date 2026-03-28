@@ -82,10 +82,11 @@ module DevExperience
 
       def dx_mirror_build_overlay(json_data, panel_html)
         <<~HTML
-          <script type="application/json" id="dx-mirror-data">#{json_data}</script>
+          <script type="application/json" id="dx-mirror-data" data-turbo-temporary>#{json_data}</script>
           <div id="dx-mirror-overlay"
                data-controller="dx-mirror"
                data-dx-mirror-introspect-url-value="/dx/dx_mirror/introspect"
+               data-turbo-temporary
                style="display:none;">
             <div class="dx-mirror-backdrop" data-action="click->dx-mirror#dismiss"></div>
             <div class="dx-mirror-modal">
@@ -165,10 +166,10 @@ module DevExperience
                      end
 
         <<~HTML
-          <div id="dx-link" class="dx-link">
+          <div id="dx-link" class="dx-link" data-turbo-temporary>
             <button class="dx-link-btn" onclick="document.getElementById('dx-link-modal').style.display=document.getElementById('dx-link-modal').style.display==='flex'?'none':'flex'">dx</button>
           </div>
-          <div id="dx-link-modal" class="dx-link-modal-overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+          <div id="dx-link-modal" class="dx-link-modal-overlay" data-turbo-temporary style="display:none;" onclick="if(event.target===this)this.style.display='none'">
             <div class="dx-mirror-modal" style="max-width:36rem;">
               <div class="dx-mirror-modal-header">
                 <h2 class="dx-mirror-modal-title">Page Reverse Engineering</h2>

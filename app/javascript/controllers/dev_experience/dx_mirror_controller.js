@@ -108,11 +108,7 @@ export default class extends Controller {
     overlay.querySelectorAll(".dx-mirror-tab").forEach(btn => {
       btn.classList.toggle("dx-mirror-tab-active", btn.dataset.tab === name)
     })
-    overlay.querySelectorAll(".dx-mirror-panel").forEach(panel => {
-      panel.style.display = panel.dataset.panel === name ? "" : "none"
-    })
-    // Also toggle panels inside the modal body (server-rendered component)
-    overlay.querySelectorAll(".dx-mirror-modal-body > div[data-panel]").forEach(panel => {
+    overlay.querySelectorAll(".dx-mirror-panels [data-panel]").forEach(panel => {
       panel.style.display = panel.dataset.panel === name ? "" : "none"
     })
   }
