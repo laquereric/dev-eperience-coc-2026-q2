@@ -18,6 +18,7 @@ DevExperience::Engine.routes.draw do
   end
 
   post "dx_mirror/introspect", to: "introspect#create"
+  post "dx_mirror/chat", to: "introspect#chat"
 
   root to: "templates#index"
 end

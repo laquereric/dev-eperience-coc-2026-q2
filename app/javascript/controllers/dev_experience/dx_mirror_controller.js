@@ -175,23 +175,33 @@ export default class extends Controller {
     resultsEl.innerHTML = '<p class="dx-mirror-muted">Thinking...</p>'
     input.value = ""
 
-    const context = this.buildQuery()
-    fetch(this.introspectUrlValue, {
+    const chatUrl = this.introspectUrlValue.replace("/introspect", "/chat")
+    fetch(chatUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": this.csrfToken()
       },
-      body: JSON.stringify({ query: `${context} — ${question}`, chat: true })
+      body: JSON.stringify({ question: question, context: this.data_ })
     })
       .then(r => r.json())
       .then(data => {
-        const answer = data.answer || data.text || "No response received."
-        resultsEl.innerHTML = `<div class="dx-mirror-chat-answer"><pre>${this.escapeHtml(answer)}</pre></div>`
+        if (data.error) {
+          resultsEl.innerHTML = `<p class="dx-mirror-warning">${this.escapeHtml(data.error)}</p>`
+        } else {
+          resultsEl.innerHTML = `<div class="dx-mirror-chat-answer">${this.renderMarkdown(data.answer || "No response.")}</div>`
+        }
       })
       .catch(err => {
         resultsEl.innerHTML = `<p class="dx-mirror-warning">Error: ${err.message}</p>`
       })
+  }
+
+  renderMarkdown(text) {
+    if (typeof DS !== "undefined" && DS.renderMarkdown) {
+      return DS.renderMarkdown(text)
+    }
+    return `<pre>${this.escapeHtml(text)}</pre>`
   }
 
   show() {
@@ -206,6 +216,9 @@ export default class extends Controller {
     document.addEventListener("click", (event) => {
       const link = event.target.closest("a[href]")
       if (!link) return
+
+      // Don't rewrite links inside the dx-link modal (e.g. Leave Mirror Mode)
+      if (link.closest("#dx-link-modal")) return
 
       const href = link.getAttribute("href")
       if (!href || href.startsWith("/dx/mirror") || href.startsWith("http") || href.startsWith("#") || href.startsWith("vscode://")) return

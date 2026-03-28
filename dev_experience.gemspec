@@ -19,4 +19,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "view_component"
   spec.add_dependency "view_component-contrib"
   spec.add_dependency "dry-initializer"
+  spec.add_dependency "ruby_llm"
+  spec.add_dependency "context-record"
 end

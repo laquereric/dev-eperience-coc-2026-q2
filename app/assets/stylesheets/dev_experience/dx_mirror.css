@@ -321,6 +321,61 @@
   margin-bottom: 0;
 }
 
+/* Context bar (repo status + breadcrumb in DX modal) */
+
+.dx-mirror-context-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.6875rem;
+  color: #6b7280;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dx-mirror-context-repo {
+  font-weight: 600;
+  color: #374151;
+}
+
+.dx-mirror-context-sep {
+  color: #d1d5db;
+}
+
+.dx-mirror-context-version {
+  color: #6366f1;
+}
+
+.dx-mirror-context-sha {
+  color: #d97706;
+}
+
+.dx-mirror-context-clean {
+  color: #16a34a;
+}
+
+.dx-mirror-context-dirty {
+  color: #dc2626;
+}
+
+.dx-mirror-context-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.6875rem;
+  color: #818cf8;
+}
+
+.dx-mirror-link-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 /* DX floating link */
 
 .dx-link {
